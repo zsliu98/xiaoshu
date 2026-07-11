@@ -4,86 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>小学生乘法口算训练</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%, #ff9a9e 100%);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      overflow: hidden; 
-    }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      padding: 40px 30px;
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      z-index: 10;
-    }
-
     .screen {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      color: #333;
-      margin-top: 0;
-      margin-bottom: 20px;
-      font-weight: 900;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.3rem;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
-      transition: all 0.3s ease;
-      font-weight: 700;
-      margin-top: 20px;
       width: 100%;
-      max-width: 300px;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
-    }
-
-    .btn:active {
-      transform: translateY(1px);
     }
 
     .options-group {
@@ -99,73 +27,68 @@
     .option-btn {
       display: inline-block;
       padding: 8px 18px;
-      background: rgba(255,255,255,0.7);
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s;
       font-weight: bold;
-      color: #555;
-      border: 2px solid transparent;
+      color: var(--text-main);
     }
     .options-group input[type="radio"]:checked + .option-btn {
-      background: #667eea;
+      background: var(--color-input);
       color: #fff;
-      box-shadow: 0 4px 10px rgba(102,126,234,0.4);
+      border-color: var(--color-input);
     }
 
     .progress-bar-container {
       width: 100%;
       height: 12px;
-      background: rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.1);
       border-radius: 10px;
       margin-bottom: 15px;
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      background: var(--color-input);
       border-radius: 10px;
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.4s;
     }
 
     .question-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(2.5rem, 8vw, 3.5rem);
-      font-weight: 900;
-      color: #2c3e50;
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 700;
+      color: var(--text-main);
       margin: 30px 0;
-      flex-wrap: nowrap;
-      white-space: nowrap;
+      flex-wrap: wrap;
     }
 
     .input-field {
-      font-family: 'Nunito', sans-serif;
+      font-family: inherit;
       font-size: clamp(2rem, 8vw, 3rem);
       font-weight: 700;
-      width: clamp(120px, 30vw, 160px);
+      width: clamp(100px, 25vw, 150px);
       text-align: center;
-      border: 3px solid #e0e0e0;
-      border-radius: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
       padding: 5px 10px;
-      margin-left: 15px;
-      background: rgba(255, 255, 255, 0.9);
+      margin: 10px;
+      background: var(--cell-bg);
+      color: var(--text-main);
       outline: none;
       transition: all 0.3s ease;
-      color: #2c3e50;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .input-field:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+      border-color: var(--color-input);
     }
 
-    /* Hide arrows in number input */
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
       -webkit-appearance: none; 
@@ -185,16 +108,14 @@
 
     .error-shake {
       animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-      border-color: #ff4d4f !important;
-      color: #ff4d4f !important;
-      box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.2) !important;
+      border-color: var(--color-error) !important;
+      color: var(--color-error) !important;
     }
 
     .correct-flash {
-      background-color: #d4edda !important;
-      border-color: #28a745 !important;
-      color: #155724 !important;
-      box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2) !important;
+      background-color: rgba(34, 197, 94, 0.2) !important;
+      border-color: var(--color-success) !important;
+      color: var(--color-success) !important;
     }
 
     .flower {
@@ -213,11 +134,11 @@
 </head>
 <body>
 
-  <div id="start-screen" class="card screen">
+  <div id="start-screen" class="game-container screen">
     <h1>🌟 乘法小达人 🌟</h1>
     
     <div style="width: 100%; margin-top: 10px;">
-      <div style="color: #666; font-size: 1.1rem; margin-bottom: 12px; font-weight: bold;">请选择训练题目数量：</div>
+      <div style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 12px; font-weight: bold; text-align: center;">请选择训练题目数量：</div>
       <div class="options-group">
         <input type="radio" id="q20" name="qCount" value="20"><label for="q20" class="option-btn">20题</label>
         <input type="radio" id="q30" name="qCount" value="30"><label for="q30" class="option-btn">30题</label>
@@ -226,54 +147,61 @@
       </div>
     </div>
     
-    <button class="btn" onclick="startPractice()">🚀 开始挑战</button>
+    <button class="btn btn-block primary" onclick="startPractice()">🚀 开始挑战</button>
   </div>
 
-  <div id="practice-screen" class="card screen" style="display: none;">
+  <div id="practice-screen" class="game-container screen" style="display: none;">
     <div class="progress-bar-container">
       <div id="progress-bar" class="progress-bar"></div>
     </div>
-    <div id="progress" style="font-size: 1.3rem; color: #666; margin-bottom: 10px; font-weight: bold;"></div>
+    <div id="progress" style="font-size: 1.3rem; color: var(--text-muted); margin-bottom: 10px; font-weight: bold;"></div>
     
     <div class="question-row">
       <span id="question-text"></span>
       <input type="number" id="answer-input" class="input-field" />
     </div>
     
-    <button id="next-btn" class="btn" onclick="nextQuestion()">下一题 ➡️</button>
+    <button id="next-btn" class="btn btn-block primary" onclick="nextQuestion()">下一题 ➡️</button>
   </div>
 
-  <div id="result-screen" class="card screen" style="display: none;">
+  <div id="result-screen" class="game-container screen" style="display: none;">
     <h1>🏆 挑战结束 🏆</h1>
     
-    <div id="result-text" style="font-size: 3rem; font-weight: 900; color: #764ba2; margin: 10px 0;"></div>
+    <div id="result-text" style="font-size: 3rem; font-weight: 900; color: var(--color-input); margin: 10px 0;"></div>
     
-    <div style="background: rgba(255,255,255,0.7); border-radius: 15px; padding: 15px 25px; margin-bottom: 20px; font-size: 1.1rem; color: #444; text-align: left; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-      <div style="margin-bottom: 8px;">📝 题目数量：<strong id="stat-count" style="color: #2c3e50;"></strong> 题</div>
-      <div style="margin-bottom: 8px;">⏱️ 所耗时间：<strong id="stat-duration" style="color: #2c3e50;"></strong></div>
-      <div>📅 完卷时间：<strong id="stat-datetime" style="color: #2c3e50;"></strong></div>
+    <div style="background: var(--btn-bg); border: 1px solid var(--btn-border); border-radius: 15px; padding: 15px 25px; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-main); text-align: left; display: inline-block;">
+      <div style="margin-bottom: 8px;">📝 题目数量：<strong id="stat-count" style="color: var(--color-input);"></strong> 题</div>
+      <div style="margin-bottom: 8px;">⏱️ 所耗时间：<strong id="stat-duration" style="color: var(--color-input);"></strong></div>
+      <div>📅 完卷时间：<strong id="stat-datetime" style="color: var(--color-input);"></strong></div>
     </div>
 
-    <div id="success-msg" style="font-size: 2.2rem; color: #ff6b6b; font-weight: bold; margin-bottom: 25px; display: none;"></div>
+    <div id="success-msg" style="font-size: 2.2rem; color: var(--color-success); font-weight: bold; margin-bottom: 25px; display: none;"></div>
     
-    <button id="correction-btn" class="btn" onclick="startCorrection()" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333; box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4); display: none; margin-top: 0;">✏️ 练习错题</button>
+    <button id="correction-btn" class="btn btn-block primary" onclick="startCorrection()" style="display: none; margin-top: 0; margin-bottom: 15px; background: linear-gradient(135deg, #f43f5e, #ef4444);">✏️ 练习错题</button>
     
-    <button class="btn" onclick="goToStart()" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); margin-top: 15px;">🔄 返回主页</button>
+    <button class="btn btn-block" onclick="goToStart()">🔄 返回主页</button>
   </div>
 
-  <div id="correction-screen" class="card screen" style="display: none;">
-    <h2 style="color: #ff6b6b; margin-top: 0; font-size: 2.2rem;">📝 错题练习</h2>
-    <div id="correction-progress" style="font-size: 1.2rem; color: #666; margin-bottom: 10px; font-weight: bold;"></div>
+  <div id="correction-screen" class="game-container screen" style="display: none;">
+    <h2 style="color: var(--color-error); margin-top: 0; font-size: 2.2rem;">📝 错题练习</h2>
+    <div id="correction-progress" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 10px; font-weight: bold;"></div>
     
     <div class="question-row">
       <span id="correction-question"></span>
       <input type="number" id="correction-input" class="input-field" />
     </div>
     
-    <button class="btn" onclick="checkCorrection()">确认 ➡️</button>
+    <button class="btn btn-block primary" onclick="checkCorrection()">确认 ➡️</button>
   </div>
 
   <script>
+    function initTheme() {
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    }
+    initTheme();
+
     const D1 = [0, 2, 3, 4, 5, 6, 7, 8, 9];
     
     function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
