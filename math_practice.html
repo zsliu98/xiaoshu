@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>小学生乘法口算训练</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%, #ff9a9e 100%);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow: hidden; 
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      padding: 40px 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 900;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.3rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+      transition: all 0.3s ease;
+      font-weight: 700;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .options-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .options-group input[type="radio"] {
+      display: none;
+    }
+    .option-btn {
+      display: inline-block;
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: bold;
+      color: #555;
+      border: 2px solid transparent;
+    }
+    .options-group input[type="radio"]:checked + .option-btn {
+      background: #667eea;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(102,126,234,0.4);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 12px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      border-radius: 10px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .question-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
+      font-weight: 900;
+      color: #2c3e50;
+      margin: 30px 0;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .input-field {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 700;
+      width: clamp(120px, 30vw, 160px);
+      text-align: center;
+      border: 3px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 5px 10px;
+      margin-left: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      outline: none;
+      transition: all 0.3s ease;
+      color: #2c3e50;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .input-field:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    /* Hide arrows in number input */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-12px); }
+      40% { transform: translateX(12px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    .error-shake {
+      animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      border-color: #ff4d4f !important;
+      color: #ff4d4f !important;
+      box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.2) !important;
+    }
+
+    .correct-flash {
+      background-color: #d4edda !important;
+      border-color: #28a745 !important;
+      color: #155724 !important;
+      box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2) !important;
+    }
+
+    .flower {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(115vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="start-screen" class="card screen">
+    <h1>🌟 乘法小达人 🌟</h1>
+    
+    <div style="width: 100%; margin-top: 10px;">
+      <div style="color: #666; font-size: 1.1rem; margin-bottom: 12px; font-weight: bold;">请选择训练题目数量：</div>
+      <div class="options-group">
+        <input type="radio" id="q20" name="qCount" value="20"><label for="q20" class="option-btn">20题</label>
+        <input type="radio" id="q30" name="qCount" value="30"><label for="q30" class="option-btn">30题</label>
+        <input type="radio" id="q40" name="qCount" value="40"><label for="q40" class="option-btn">40题</label>
+        <input type="radio" id="q50" name="qCount" value="50" checked><label for="q50" class="option-btn">50题</label>
+      </div>
+    </div>
+    
+    <button class="btn" onclick="startPractice()">🚀 开始挑战</button>
+  </div>
+
+  <div id="practice-screen" class="card screen" style="display: none;">
+    <div class="progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div id="progress" style="font-size: 1.3rem; color: #666; margin-bottom: 10px; font-weight: bold;"></div>
+    
+    <div class="question-row">
+      <span id="question-text"></span>
+      <input type="number" id="answer-input" class="input-field" />
+    </div>
+    
+    <button id="next-btn" class="btn" onclick="nextQuestion()">下一题 ➡️</button>
+  </div>
+
+  <div id="result-screen" class="card screen" style="display: none;">
+    <h1>🏆 挑战结束 🏆</h1>
+    
+    <div id="result-text" style="font-size: 3rem; font-weight: 900; color: #764ba2; margin: 10px 0;"></div>
+    
+    <div style="background: rgba(255,255,255,0.7); border-radius: 15px; padding: 15px 25px; margin-bottom: 20px; font-size: 1.1rem; color: #444; text-align: left; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+      <div style="margin-bottom: 8px;">📝 题目数量：<strong id="stat-count" style="color: #2c3e50;"></strong> 题</div>
+      <div style="margin-bottom: 8px;">⏱️ 所耗时间：<strong id="stat-duration" style="color: #2c3e50;"></strong></div>
+      <div>📅 完卷时间：<strong id="stat-datetime" style="color: #2c3e50;"></strong></div>
+    </div>
+
+    <div id="success-msg" style="font-size: 2.2rem; color: #ff6b6b; font-weight: bold; margin-bottom: 25px; display: none;"></div>
+    
+    <button id="correction-btn" class="btn" onclick="startCorrection()" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333; box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4); display: none; margin-top: 0;">✏️ 练习错题</button>
+    
+    <button class="btn" onclick="goToStart()" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); margin-top: 15px;">🔄 返回主页</button>
+  </div>
+
+  <div id="correction-screen" class="card screen" style="display: none;">
+    <h2 style="color: #ff6b6b; margin-top: 0; font-size: 2.2rem;">📝 错题练习</h2>
+    <div id="correction-progress" style="font-size: 1.2rem; color: #666; margin-bottom: 10px; font-weight: bold;"></div>
+    
+    <div class="question-row">
+      <span id="correction-question"></span>
+      <input type="number" id="correction-input" class="input-field" />
+    </div>
+    
+    <button class="btn" onclick="checkCorrection()">确认 ➡️</button>
+  </div>
+
+  <script>
+    const D1 = [0, 2, 3, 4, 5, 6, 7, 8, 9];
+    
+    function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function getD2() { return Math.floor(Math.random() * 90) + 10; } // 10..99
+    function getM10(maxK) { return (Math.floor(Math.random() * maxK) + 1) * 10; } 
+    function getM100(maxK) { return (Math.floor(Math.random() * maxK) + 1) * 100; }
+
+    function generateQuestion(type) {
+      let attempts = 0;
+      while (true) {
+        attempts++;
+        if (attempts > 2000) return { num1: 2, num2: 3, answer: 6, userAns: null }; // Fallback
+        
+        let a, b;
+        switch (type) {
+          case 1: a = getRandom(D1); b = getRandom(D1); break; // 一位数乘一位数
+          case 2: a = getD2(); b = getRandom(D1); break; // 两位数乘一位数
+          case 3: a = getM10(999); b = getRandom(D1); break; // 整十数乘一位数
+          case 4: a = getM10(99); b = getM10(99); break; // 整十数乘整十数
+          case 5: a = getM100(99); b = getRandom(D1); break; // 整百数乘一位数
+          case 6: a = getM100(9); b = getD2(); break; // 整百数乘两位数
+        }
+        
+        if (a * b < 10000) {
+          if (Math.random() > 0.5) return { num1: b, num2: a, answer: a * b, userAns: null };
+          return { num1: a, num2: b, answer: a * b, userAns: null };
+        }
+      }
+    }
+
+    let questions = [];
+    let currentIndex = 0;
+    let wrongQuestions = [];
+    let correctionIndex = 0;
+    let mode = 'START'; // START | PRACTICE | RESULT | CORRECTION
+    let startTime = null;
+    let totalQuestionsSelected = 50;
+
+    function formatDuration(ms) {
+      let totalSec = Math.floor(ms / 1000);
+      let min = Math.floor(totalSec / 60);
+      let sec = totalSec % 60;
+      if (min > 0) return `${min} 分 ${sec} 秒`;
+      return `${sec} 秒`;
+    }
+
+    function formatDate(date) {
+      let y = date.getFullYear();
+      let m = String(date.getMonth() + 1).padStart(2, '0');
+      let d = String(date.getDate()).padStart(2, '0');
+      let hh = String(date.getHours()).padStart(2, '0');
+      let mm = String(date.getMinutes()).padStart(2, '0');
+      let ss = String(date.getSeconds()).padStart(2, '0');
+      return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+    }
+
+    function goToStart() {
+      document.getElementById('start-screen').style.display = 'flex';
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('practice-screen').style.display = 'none';
+      document.getElementById('correction-screen').style.display = 'none';
+      mode = 'START';
+    }
+
+    function startPractice() {
+      let selected = document.querySelector('input[name="qCount"]:checked');
+      if (selected) {
+        totalQuestionsSelected = parseInt(selected.value, 10);
+      } else {
+        totalQuestionsSelected = 50; // fallback
+      }
+      
+      // Ensure equal distribution of the 6 question types
+      let typesArray = [];
+      for (let i = 0; i < totalQuestionsSelected; i++) {
+        typesArray.push((i % 6) + 1);
+      }
+      // Shuffle types array
+      for (let i = typesArray.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [typesArray[i], typesArray[j]] = [typesArray[j], typesArray[i]];
+      }
+
+      questions = [];
+      for (let i = 0; i < totalQuestionsSelected; i++) {
+        questions.push(generateQuestion(typesArray[i]));
+      }
+      
+      currentIndex = 0;
+      mode = 'PRACTICE';
+      startTime = new Date();
+      
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('practice-screen').style.display = 'flex';
+      
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      let q = questions[currentIndex];
+      document.getElementById('progress').innerText = `第 ${currentIndex + 1} / ${totalQuestionsSelected} 题`;
+      document.getElementById('progress-bar').style.width = ((currentIndex / totalQuestionsSelected) * 100) + '%';
+      
+      document.getElementById('question-text').innerText = `${q.num1} × ${q.num2} = `;
+      
+      let input = document.getElementById('answer-input');
+      input.value = '';
+      
+      let btn = document.getElementById('next-btn');
+      if (currentIndex === totalQuestionsSelected - 1) {
+        btn.innerText = '提交 ✅';
+      } else {
+        btn.innerText = '下一题 ➡️';
+      }
+      
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function nextQuestion() {
+      let input = document.getElementById('answer-input');
+      let valStr = input.value.trim();
+      
+      if (valStr === '') {
+        input.classList.add('error-shake');
+        setTimeout(() => input.classList.remove('error-shake'), 400);
+        return;
+      }
+      
+      questions[currentIndex].userAns = parseInt(valStr, 10);
+      
+      if (currentIndex < totalQuestionsSelected - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        document.getElementById('progress-bar').style.width = '100%';
+        showResult();
+      }
+    }
+
+    function showResult() {
+      mode = 'RESULT';
+      document.getElementById('practice-screen').style.display = 'none';
+      document.getElementById('result-screen').style.display = 'flex';
+      
+      let endTime = new Date();
+      let durationMs = endTime - startTime;
+      
+      wrongQuestions = questions.filter(q => q.userAns !== q.answer);
+      let correctCount = totalQuestionsSelected - wrongQuestions.length;
+      let accuracy = (correctCount / totalQuestionsSelected) * 100;
+      
+      document.getElementById('result-text').innerText = `正确率: ${accuracy.toFixed(1)}%`;
+      document.getElementById('stat-count').innerText = totalQuestionsSelected;
+      document.getElementById('stat-duration').innerText = formatDuration(durationMs);
+      document.getElementById('stat-datetime').innerText = formatDate(endTime);
+      
+      let correctionBtn = document.getElementById('correction-btn');
+      let successMsg = document.getElementById('success-msg');
+      
+      if (accuracy === 100) {
+        successMsg.style.display = 'block';
+        successMsg.innerHTML = '全对！<br>太棒了！';
+        correctionBtn.style.display = 'none';
+        showFlowers();
+      } else {
+        successMsg.style.display = 'none';
+        correctionBtn.style.display = 'inline-block';
+      }
+    }
+
+    function showFlowers() {
+      const flowers = ['🌸', '🌺', '🌻', '🌼', '🌷', '🏵️', '🌹', '✨', '🎉', '💯'];
+      let count = 0;
+      let interval = setInterval(() => {
+        let flower = document.createElement('div');
+        flower.innerText = getRandom(flowers);
+        flower.className = 'flower';
+        flower.style.left = Math.random() * 100 + 'vw';
+        flower.style.top = '-10vh';
+        flower.style.fontSize = (Math.random() * 25 + 25) + 'px';
+        
+        flower.style.animationName = 'fall';
+        flower.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        document.body.appendChild(flower);
+        
+        setTimeout(() => {
+          flower.remove();
+        }, 4000);
+        
+        count++;
+        if (count > 120) clearInterval(interval);
+      }, 25);
+    }
+
+    function startCorrection() {
+      mode = 'CORRECTION';
+      correctionIndex = 0;
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('correction-screen').style.display = 'flex';
+      renderCorrection();
+    }
+
+    function renderCorrection() {
+      if (correctionIndex >= wrongQuestions.length) {
+        document.getElementById('correction-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'flex';
+        document.getElementById('result-text').innerText = '错题已全部改正！';
+        document.getElementById('correction-btn').style.display = 'none';
+        
+        let successMsg = document.getElementById('success-msg');
+        successMsg.style.display = 'block';
+        successMsg.innerHTML = '棒棒哒！🎉';
+        
+        showFlowers();
+        return;
+      }
+      
+      let q = wrongQuestions[correctionIndex];
+      document.getElementById('correction-progress').innerText = `错题练习: 第 ${correctionIndex + 1} / ${wrongQuestions.length} 题`;
+      document.getElementById('correction-question').innerText = `${q.num1} × ${q.num2} = `;
+      
+      let input = document.getElementById('correction-input');
+      input.value = '';
+      input.classList.remove('correct-flash', 'error-shake');
+      input.style.color = '';
+      input.disabled = false;
+      
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function checkCorrection() {
+      let input = document.getElementById('correction-input');
+      let val = parseInt(input.value.trim(), 10);
+      
+      if (isNaN(val)) {
+        input.classList.add('error-shake');
+        setTimeout(() => input.classList.remove('error-shake'), 400);
+        return;
+      }
+      
+      let q = wrongQuestions[correctionIndex];
+      if (val === q.answer) {
+        input.classList.add('correct-flash');
+        input.disabled = true;
+        setTimeout(() => {
+          input.classList.remove('correct-flash');
+          input.disabled = false;
+          correctionIndex++;
+          renderCorrection();
+        }, 600);
+      } else {
+        input.classList.add('error-shake');
+        setTimeout(() => {
+          input.classList.remove('error-shake');
+          input.value = '';
+          input.focus();
+        }, 600);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (mode === 'PRACTICE' && document.getElementById('practice-screen').style.display !== 'none') {
+          nextQuestion();
+        } else if (mode === 'CORRECTION' && document.getElementById('correction-screen').style.display !== 'none') {
+          checkCorrection();
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
